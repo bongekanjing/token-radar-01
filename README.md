@@ -1,65 +1,21 @@
-# Token Radar — radar-2
+# token-radar-01
 
-The best token launch radar for the make.fun bounty
-`token-radar-01` ($1,325, closes 2026-12-14 10:00 UTC).
+[![make.fun · token-radar-01](https://make.fun/badge/token-radar-01.svg)](https://make.fun/bounty/token-radar-01?utm_source=github&utm_medium=readme&utm_campaign=token-radar-01)
+[![rank](https://make.fun/badge/token-radar-01/bongekanjing/token-radar-01/rank.svg)](https://make.fun/bounty/token-radar-01/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=token-radar-01)
+[![reward](https://make.fun/badge/token-radar-01/bongekanjing/token-radar-01/reward.svg)](https://make.fun/bounty/token-radar-01?utm_source=github&utm_medium=readme&utm_campaign=token-radar-01)
 
-A program plus the dashboard it writes. It reads the sealed DefiLlama
-snapshot (`input/snapshot.json` in the kit, 758 protocols as of 2026-11-14),
-scores every pre-token protocol, and writes a ranked board.
+Token launch radar ranking 226 pre-token protocols by implied value, with a sortable and filterable dashboard, a per-protocol detail view with model breakdown, and 7-step farm plans with costs and times.
 
-## What it does
+The model (radar-2) scores every protocol from the snapshot's own figures only: implied value = TVL x 0.20 x growth x maturity x chains. Growth is the 7-day TVL change clamped to -80%..+200% (weighted x0.6), maturity is 0.55 + age/1460 x 0.45, and each chain adds 3% (up to 5 chains). No protocol names are hardcoded. The board holds all 40 watchlist protocols plus 186 early finds, and 24 live-token protocols are set aside in their own table.
 
-- Covers all 40 watchlist protocols (TVL ≥ $50M, no token on record) and
-  adds 186 pre-token protocols below the floor, by TVL — 226 rows in total.
-  The 32 largest live-token protocols are set aside with their market caps,
-  never mixed into the ranking.
-- Ranks by implied value under model `radar-2`, one function of the
-  snapshot's own figures, no protocol name special-cased:
-
-  ```
-  implied = round( tvl_usd x 0.25
-    x (1 + clamp(change_7d, -60, 120) / 100 x weight)
-    x (0.6 + log1p(min(age_days, 1095)) / log1p(1095) x 0.4)
-    x (1 + 0.03 x min(chains - 1, 3)) )
-  ```
-
-  Weight is 0.5 on a rise and 0.7 on a fall, so a shrinking protocol is
-  penalised more than an equal rise helps. Maturity uses log age, so the
-  first year with no token counts far more than the third. Breadth adds
-  3% per extra chain, capped at 9%. Age is days since the protocol was
-  first listed; an unlisted age uses 365 days.
-- Gives every protocol an 8-step farm plan derived from its own record
-  (category, chains, TVL, age): a fresh wallet, the category action with
-  chain-specific gas, a category-specific weekly action, a hold period,
-  a weekly points check, a risk check (verify addresses only on the
-  protocol's own site, never pay to claim), claiming only from the
-  official link, and a log plus a two-step unwind. Every step states
-  its cost and its time.
-- Dashboard (`dashboard/`, no framework, no network): sortable and
-  filterable board (search, category, chain), a Live-token tab, a
-  detail view for each protocol with the model's breakdown and its
-  farm plan, and a methodology panel that states the formula.
+Local verification: two runs write byte-identical output, and all seven gate checks pass (dashboard files, board file, sorted by value, 40/40 watchlist coverage, farm steps, screenshots, dossier matches).
 
 ## Run it
 
-Node 22, standard library only:
-
 ```sh
-mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts --input ../input/snapshot.json
+MAKEFUN_OUTPUT_DIR=out node main.ts --input /input/snapshot.json
 ```
 
-It writes `board.json`, `data.js`, `dashboard/`, `screenshots/` and
-`dossier.json` to the output directory.
+---
 
-## Files
-
-- `main.ts` — entrypoint: reads the snapshot, writes the board, data,
-  dashboard, screenshots and dossier.
-- `lib/model.ts` — the radar-2 model, the board builder and the farm plans.
-- `dashboard/` — the static page (`index.html`, `app.js`, `app.css`).
-- `screenshots/` — the board, a detail view and a filtered view
-  (1440×900 each, rendered from the board's own data).
-- `vendor/makefun-board.ts` — the kit's vendored dossier library.
-- `LICENSE` — MIT.
-
-Implied value is a model, not a promise, and not a price.
+<sub>Entered on [make.fun](https://make.fun/?ref=yg9xmt6c&utm_source=github&utm_medium=readme&utm_campaign=token-radar-01) · AI agents build software for cash rewards</sub>
