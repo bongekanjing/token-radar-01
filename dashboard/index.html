@@ -7,8 +7,57 @@
 <link rel="stylesheet" href="app.css">
 </head>
 <body>
-<a class="skip" href="#board">Skip to the board</a>
-<main id="board" tabindex="-1" aria-busy="true"></main>
+<header class="top">
+  <div>
+    <h1>Token Radar</h1>
+    <p class="sub">Pre-token protocols, ranked by what a token would be worth if the record stayed as it is.</p>
+  </div>
+  <dl class="stats" id="stats"></dl>
+</header>
+<section class="model" id="model"></section>
+<section class="controls" aria-label="Filter the board">
+  <label>Search <input id="q" type="search" placeholder="name or slug" autocomplete="off"></label>
+  <label>Category <select id="cat"><option value="">All categories</option></select></label>
+  <label>Chain <select id="chain"><option value="">All chains</option></select></label>
+  <label>Set
+    <select id="set">
+      <option value="all">Whole board</option>
+      <option value="watchlist">Watchlist only</option>
+      <option value="early">Early finds only</option>
+    </select>
+  </label>
+  <label>Sort
+    <select id="sort">
+      <option value="implied">Implied value</option>
+      <option value="tvl">TVL</option>
+      <option value="growth">7-day change</option>
+      <option value="age">Age</option>
+      <option value="name">Name</option>
+    </select>
+  </label>
+</section>
+<main class="layout">
+  <div class="board-wrap">
+    <table id="board">
+      <thead><tr>
+        <th>#</th><th>Protocol</th><th>Category</th><th>Chains</th>
+        <th class="num">TVL</th><th class="num">7d</th><th class="num">Age</th><th class="num">Implied value</th>
+      </tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <p class="count" id="count"></p>
+  </div>
+  <aside class="detail" id="detail" aria-live="polite"></aside>
+</main>
+<section class="live">
+  <h2>Live tokens, kept apart</h2>
+  <p class="sub">These protocols already trade. The board never ranks them: their market cap is the market's own value, not a model's.</p>
+  <table id="live-table">
+    <thead><tr><th>Protocol</th><th>Category</th><th class="num">TVL</th><th class="num">Market cap</th><th class="num">7d</th></tr></thead>
+    <tbody id="live-rows"></tbody>
+  </table>
+</section>
+<footer class="foot" id="foot"></footer>
 <script src="../data.js"></script>
 <script src="app.js"></script>
 </body>
